@@ -1,0 +1,8 @@
+name         'fernandoalmeida-mongodb'
+version      '0.0.1'
+source       'https://github.com/fernandoalmeida/puppet-postgresql.git'
+author       'Fernando Almeida'
+license      'Apache License, Version 2.0'
+summary      'A Puppet module for installing and configuring PostgreSQL'
+description  'A Puppet module for installing and configuring PostgreSQL'
+project_page 'https://github.com/fernandoalmeida/puppet-postgresql'
