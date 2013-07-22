@@ -8,6 +8,7 @@ define postgresql::install(
 
   $packages = [
                "postgresql-${version}",
+               "postgresql-client-${version}",
                "postgresql-contrib-${version}",
                "postgresql-server-dev-${version}",
                "libpgsql-ruby",
@@ -35,7 +36,7 @@ define postgresql::install(
   }->
   exec {"change_password":
     user        => "postgres",
-    command     => "psql -p ${port} -c \"ALTER USER postgres WITH PASSWORD '${password}'\" -d template1",
+    command     => "psql -p ${port} -c \"ALTER USER postgres WITH PASSWORD '${password}'\" -d template0",
     unless      => "echo 'SELECT 1' | psql -p ${port} -t -q -h localhost -U postgres",
     environment => "PGPASSWORD=${password}",
   }->

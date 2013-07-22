@@ -27,12 +27,12 @@ define postgresql::master(
     file {"postgresql.conf":
       ensure   => file,
       path     => "/etc/postgresql/${version}/main/postgresql.conf",
-      content  => template("/home/fernando/trabalho/projetos/puppet/modules/postgresql/templates/postgresql.erb"),
+      content  => template("postgresql/postgresql.erb"),
     }->
     file {"pg_hba.conf":
       ensure   => file,
       path     => "/etc/postgresql/${version}/main/pg_hba.conf",
-      content  => template("/home/fernando/trabalho/projetos/puppet/modules/postgresql/templates/pg_hba.erb"),
+      content  => template("postgresql/pg_hba.erb"),
     }->
     file {$archive_path:
       ensure => directory,

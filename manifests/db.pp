@@ -4,7 +4,7 @@ define postgresql::db(
   $encoding    = 'UTF8',
   $limit       = -1,
   $valid_until = 'infinity',
-  $template    = 'template1'
+  $template    = 'template0'
   ){
   
   exec {"db_${db}":

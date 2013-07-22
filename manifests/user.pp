@@ -3,7 +3,7 @@ define postgresql::user(
   $password,
   $permissions = "SUPERUSER CREATEDB CREATEROLE REPLICATION",
   $valid_until = 'infinity',
-  $template    = 'template1'
+  $template    = 'template0'
   ){
   
   exec {"user_${user}":
