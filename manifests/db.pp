@@ -10,7 +10,7 @@ define postgresql::db(
   exec {"db_${db}":
     user    => "postgres",
     command => "psql -c \"CREATE DATABASE ${db} WITH ENCODING='${encoding}' OWNER=${user} CONNECTION LIMIT=${limit}\" -d ${template}",
-    onlyif  => "psql -c \"SELECT * FROM pg_catalog.pg_database WHERE datname = '${db}'\" -d ${template} | grep '(0 '"
+    onlyif  => "psql -t -c \"SELECT count(*) FROM pg_catalog.pg_database WHERE datname = '${db}'\" -d ${template} | grep '0'"
   }
   
 }

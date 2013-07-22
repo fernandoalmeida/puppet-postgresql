@@ -1,4 +1,17 @@
-define postgresql::install($version, $password) {
+define postgresql::install(
+  $version,
+  $password,
+  $port        = 5432,
+  $master      = false,
+  $sync        = false,
+  ) {
+
+  $packages = [
+               "postgresql-${version}",
+               "postgresql-contrib-${version}",
+               "postgresql-server-dev-${version}",
+               "libpgsql-ruby",
+               ]
   
   exec {"apt-key":
     command => "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
@@ -12,18 +25,29 @@ define postgresql::install($version, $password) {
   exec {'apt-get update':
     refreshonly => true,
   }->
-  package {[
-            "postgresql-${version}",
-            "postgresql-server-dev-${version}",
-            "libpgsql-ruby",
-            ]:
-              ensure => installed,
-  }->
-  service {"postgresql":
-    ensure => running,
+  package {$packages:
+    ensure => installed,
+    notify => Service["postgresql"],
   }->
   exec {"change_password":
-    user    => "postgres",
-    command => "psql -c \"ALTER USER postgres WITH PASSWORD '${password}'\" -d template1",
+    user        => "postgres",
+    command     => "psql -p ${port} -c \"ALTER USER postgres WITH PASSWORD '${password}'\" -d template1",
+    unless      => "echo 'SELECT 1' | psql -p ${port} -t -q -h localhost -U postgres",
+    environment => "PGPASSWORD=${password}",
+  }->
+  postgresql::master {"master_${version}":
+    version => $version,
+    port    => $port,
+    onlyif  => $master,
+    sync    => $sync,
+    notify  => Service["postgresql"],
   }
+  
+  service {"postgresql":
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    subscribe  => [ Package[$packages], Postgresql::Master["master_${version}"] ],
+  }
+
 }
