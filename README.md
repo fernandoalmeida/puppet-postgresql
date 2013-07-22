@@ -7,8 +7,11 @@ Usage example
 --------------
 
     postgresql::install {
-      version => "9.2",
-      password => "strong_password"
+      version  => "9.2",
+      port     => "5432",
+      password => "strong_password",
+      master   => true,
+      sync     => false
     }
     
     postgresql::user {
