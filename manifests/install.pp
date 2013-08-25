@@ -15,8 +15,8 @@ define postgresql::install(
                ]
   
   exec {"kernel_shmmax":
-    command => "sysctl -w kernel.shmmax=600000000 && echo 'sysctl -w kernel.shmmax=600000000' >> /etc/rc.local",
-    unless  => "cat /proc/sys/kernel/shmmax | grep 600000000",
+    command => "sysctl -w kernel.shmmax=600000000 && echo 'kernel.shmmax = 600000000' >> /etc/sysctl.conf",
+    unless  => "cat /etc/sysctl.conf | grep 'kernel.shmmax = 600000000'",
   }->
   exec {"apt-key":
     command => "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
