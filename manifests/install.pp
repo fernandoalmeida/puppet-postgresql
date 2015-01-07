@@ -4,6 +4,10 @@ define postgresql::install(
   $port        = 5432,
   $master      = false,
   $sync        = false,
+  $shared_buffers = '400MB',
+  $temp_buffers = '200MB',
+  $work_mem = '100MB',
+  $maintenance_work_mem = '200MB',
   ) {
 
   $packages = [
@@ -11,7 +15,6 @@ define postgresql::install(
                "postgresql-client-${version}",
                "postgresql-contrib-${version}",
                "postgresql-server-dev-${version}",
-               "libpgsql-ruby",
                ]
   
   exec {"kernel_shmmax":
@@ -36,7 +39,7 @@ define postgresql::install(
   }->
   exec {"change_password":
     user        => "postgres",
-    command     => "psql -p ${port} -c \"ALTER USER postgres WITH PASSWORD '${password}'\" -d template0",
+    command     => "psql -p ${port} -c \"ALTER USER postgres WITH PASSWORD '${password}'\" -d template1",
     unless      => "echo 'SELECT 1' | psql -p ${port} -t -q -h localhost -U postgres",
     environment => "PGPASSWORD=${password}",
   }->
